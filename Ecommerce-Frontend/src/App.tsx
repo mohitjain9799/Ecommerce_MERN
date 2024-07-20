@@ -36,11 +36,11 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
 
         {/*Admin routes*/}
-        <Route
+        {/*<Route
           // element={
           //   <ProtectedRoute isAuthenticated={true} adminRoute={true} isAdmin={true} />
           // }
-        >
+        >*/}
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/product" element={<Products />} />
           <Route path="/admin/customer" element={<Customers />} />
@@ -60,7 +60,7 @@ const App = () => {
           <Route path="/admin/product/:id" element={<ProductManagement />} />
 
           <Route path="/admin/transaction/:id" element={<TransactionManagement />} />
-        </Route>;
+       {/* </Route>;*/}
 
       </Routes>
     </Suspense>
