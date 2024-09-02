@@ -3,12 +3,12 @@ import { myCache } from "../app.js";
 import { TryCatch } from "../middlewares/error.js";
 import { Product } from "../models/product.js";
 import { rm } from "fs";
-/*import {
-  deleteFromCloudinary,
-  findAverageRatings,
-  invalidateCache,
-  uploadToCloudinary,
-} from "../utils/features.js";*/
+import { 
+/*deleteFromCloudinary,
+findAverageRatings,*/
+invalidateCache,
+//uploadToCloudinary,
+ } from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
 // Revalidate on New,Update,Delete Product & on New Order
 export const getlatestProducts = TryCatch(async (req, res, next) => {
@@ -138,7 +138,7 @@ export const newProduct = TryCatch(async (req, res, next) => {
         category: category.toLowerCase(),
         photos: photos?.path,
     });
-    //await invalidateCache({ product: true, admin: true });
+    await invalidateCache({ product: true, admin: true });
     return res.status(201).json({
         success: true,
         message: "Product Created Successfully",
@@ -177,12 +177,11 @@ export const updateProduct = TryCatch(async (req, res, next) => {
         product.category = category;
     //if (description) product.description = description;
     await product.save();
-    /*await invalidateCache({
-      product: true,
-      productId: String(product._id),
-      admin: true,
+    await invalidateCache({
+        product: true,
+        productId: String(product._id),
+        admin: true,
     });
-  */
     return res.status(200).json({
         success: true,
         message: "Product Updated Successfully",
@@ -199,12 +198,11 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
         console.log("Product photo deleted");
     });
     await product.deleteOne();
-    /*  await invalidateCache({
+    await invalidateCache({
         product: true,
         productId: String(product._id),
         admin: true,
-      });
-    */
+    });
     return res.status(200).json({
         success: true,
         message: "Product Deleted Successfully",

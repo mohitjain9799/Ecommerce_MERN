@@ -2,31 +2,32 @@ import express from "express";
 import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import { config } from "dotenv";
-/*import morgan from "morgan";
+import morgan from "morgan";
 import Stripe from "stripe";
-import cors from "cors";
+/*import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";*/
 import NodeCache from "node-cache";
 
 // Importing Routes
 import userRoute from "./routes/user.js";
 import productRoute from "./routes/product.js";
-/*import orderRoute from "./routes/order.js";
+import orderRoute from "./routes/order.js";
 import paymentRoute from "./routes/payment.js";
-import dashboardRoute from "./routes/stats.js";*/
+import dashboardRoute from "./routes/stats.js";
 
-/*config({
+config({
   path: "./.env",
-});*/
+});
 
-const port = 4000;
-/*const mongoURI = process.env.MONGO_URI || "";
+const port = process.env.PORT||4000;
+const mongoURI = process.env.MONGO_URI || "";
 const stripeKey = process.env.STRIPE_KEY || "";
-const redisURI = process.env.REDIS_URI || "";
+/*const redisURI = process.env.REDIS_URI || "";
 export const redisTTL = process.env.REDIS_TTL || 60 * 60 * 4;*/
 
-connectDB();
-export const myCache = new NodeCache()
+connectDB(mongoURI);
+export const myCache = new NodeCache();
+export const stripe = new Stripe(stripeKey);
 /*export const redis = connectRedis(redisURI);
 
 cloudinary.config({
@@ -35,12 +36,12 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 */
-//export const stripe = new Stripe(stripeKey);
+
 
 const app = express();
 
 app.use(express.json());
-//app.use(morgan("dev"));
+app.use(morgan("dev"));
 /*app.use(
   cors({
     origin: [process.env.CLIENT_URL!],
@@ -56,9 +57,9 @@ app.get("/", (req, res) => {
 // Using Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
-/*app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/order", orderRoute);
 app.use("/api/v1/payment", paymentRoute);
-app.use("/api/v1/dashboard", dashboardRoute);*/
+app.use("/api/v1/dashboard", dashboardRoute);
 
 app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
