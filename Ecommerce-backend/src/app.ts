@@ -31,6 +31,7 @@ const razorpayKey = process.env.RAZORPAY_KEY_ID || "";
 const razorpaySecretKey = process.env.RAZORPAY_SECRET_KEY || "";
 const redisURI = process.env.REDIS_URL || "";
 const clientURL = process.env.CLIENT_URL || "";
+const firebaseURL = process.env.FIREBASE_URL || "";
 export const redisTTL = process.env.REDIS_TTL || 60 * 60 * 4;
 
 connectDB(mongoURI);
@@ -73,13 +74,30 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(
-  cors({
-    origin: [clientURL],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// CORS configuration for production (Vercel + Firebase)
+const corsOptions = {
+  origin: function (origin: string | undefined, callback: Function) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      clientURL,
+      firebaseURL
+    ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || !clientURL) {
+      console.log('CORS allowed origin:', origin);
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("API Working with /api/v1");
