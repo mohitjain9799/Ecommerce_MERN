@@ -1,4 +1,5 @@
 import { stripe } from "../app.js";
+import { pay } from "../app.js";
 import { TryCatch } from "../middlewares/error.js";
 import { Coupon } from "../models/coupon.js";
 import { Product } from "../models/product.js";

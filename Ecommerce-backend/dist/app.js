@@ -4,6 +4,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import { config } from "dotenv";
 import morgan from "morgan";
 import Stripe from "stripe";
+import Razorpay from "razorpay";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 // Importing Routes
@@ -19,6 +20,8 @@ config({
 const port = process.env.PORT || 4000;
 const mongoURI = process.env.MONGO_URI || "";
 const stripeKey = process.env.STRIPE_KEY || "";
+const razorpayKey = process.env.RAZORPAY_KEY_ID || "";
+const razorpaySecretKey = process.env.RAZORPAY_SECRET_KEY || "";
 const redisURI = process.env.REDIS_URL || "";
 const clientURL = process.env.CLIENT_URL || "";
 export const redisTTL = process.env.REDIS_TTL || 60 * 60 * 4;
@@ -46,6 +49,7 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET,
 });
 export const stripe = new Stripe(stripeKey);
+export const pay = new Razorpay({ key_id: 'razorpayKey', key_secret: 'razorpaySecretKey' });
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));

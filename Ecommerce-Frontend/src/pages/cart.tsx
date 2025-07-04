@@ -36,8 +36,13 @@ const Cart = () => {
     dispatch(removeCartItem(productId));
   };
   useEffect(() => {
+    if (!couponCode) {
+      dispatch(discountApplied(0));
+      setIsValidCouponCode(false);
+      dispatch(calculatePrice());
+      return;
+    }
     const { token: cancelToken, cancel } = axios.CancelToken.source();
-
     const timeOutID = setTimeout(() => {
       axios
         .get(`${server}/api/v1/payment/discount?coupon=${couponCode}`, {
@@ -55,7 +60,6 @@ const Cart = () => {
           dispatch(calculatePrice());
         });
     }, 1000);
-
     return () => {
       clearTimeout(timeOutID);
       cancel();

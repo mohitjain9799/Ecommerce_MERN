@@ -19,14 +19,16 @@ const DiscountManagement = () => {
     loading: isLoading,
     data,
     error,
-  } = useFetchData<SingleDiscountResponse>(
-    `${server}/api/v1/payment/coupon/${id}?id=${user?._id}`,
-    "discount-code"
-  );
+  } = useFetchData<SingleDiscountResponse>({
+    url: `${server}/api/v1/payment/coupon/${id}?id=${user?._id}`,
+    dependencyProps: [id || "", user?._id || ""]
+  });
 
-  if (error) {
-    toast.error(error);
-  }
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const [btnLoading, setBtnLoading] = useState<boolean>(false);
 

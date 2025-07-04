@@ -45,10 +45,10 @@ const Discount = () => {
     data,
     loading: isLoading,
     error,
-  } = useFetchData<AllDiscountResponse>(
-    `${server}/api/v1/payment/coupon/all?id=${user?._id}`,
-    "discount-codes"
-  );
+  } = useFetchData<AllDiscountResponse>({
+    url: user?._id ? `${server}/api/v1/payment/coupon/all?id=${user._id}` : "",
+    dependencyProps: [user?._id || ""]
+  });
 
   const [rows, setRows] = useState<DataType[]>([]);
 
@@ -60,7 +60,9 @@ const Discount = () => {
     rows.length > 6
   )();
 
-  if (error) toast.error(error);
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
 
   useEffect(() => {
     if (data)

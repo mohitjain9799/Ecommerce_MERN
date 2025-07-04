@@ -118,7 +118,10 @@ export const newProduct = TryCatch(
       description,
       stock,
       category: category.toLowerCase(),
-      photos: photosURL,
+      photos: photosURL.map((photo) => ({
+        public_id: photo.public_id,
+        url: photo.url,
+      })),
     });
 
     await invalidateCache({ product: true, admin: true });
@@ -145,13 +148,10 @@ export const updateProduct = TryCatch(async (req, res, next) => {
     const ids = product.photos.map((photo) => photo.public_id);
 
     await deleteFromCloudinary(ids);
-    product.photos = photosURL;
-    //product.photos.public_id = ids;
-    //product.photos.url = photosURL;
-    /*product.photos = photosURL.map((photo) => ({
+    product.set('photos', photosURL.map((photo) => ({
       public_id: photo.public_id,
       url: photo.url,
-    }));*/
+    })));
     await product.save();
   }
 
