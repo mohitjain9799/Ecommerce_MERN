@@ -4,7 +4,7 @@ import { CartItem, ShippingInfo } from "../../types/types";
 
 const initialState: CartReducerInitialState = {
   loading: false,
-  cartItems: [],
+  cartItems: JSON.parse(localStorage.getItem("cartItems") || "[]"),
   subtotal: 0,
   tax: 0,
   shippingCharges: 0,
