@@ -74,30 +74,17 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
-// CORS configuration for production (Vercel + Firebase)
-const corsOptions = {
-  origin: function (origin: string | undefined, callback: Function) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
+// Simple CORS configuration for production
+app.use(
+  cors({
+    origin: [
       clientURL,
       firebaseURL
-    ];
-    
-    if (allowedOrigins.indexOf(origin) !== -1 || !clientURL) {
-      console.log('CORS allowed origin:', origin);
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: false, // No cookies needed
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("API Working with /api/v1");

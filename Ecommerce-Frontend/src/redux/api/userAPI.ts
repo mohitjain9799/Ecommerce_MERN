@@ -13,7 +13,6 @@ export const userAPI = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/user/`,
-    credentials: "include",
   }),
   tagTypes: ["users"],
   endpoints: (builder) => ({
@@ -44,10 +43,7 @@ export const userAPI = createApi({
 export const getUser = async (id: string) => {
   try {
     const { data }: { data: UserResponse } = await axios.get(
-      `${import.meta.env.VITE_SERVER}/api/v1/user/${id}`,
-      {
-        withCredentials: true,
-      }
+      `${import.meta.env.VITE_SERVER}/api/v1/user/${id}`
     );
 
     return data;
